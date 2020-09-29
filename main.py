@@ -9,8 +9,10 @@ import keyboard
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\reach\AppData\Local\Tesseract-OCR\tesseract.exe'
 rpsBot = False
 stupidChar = ''
+numOfTries = 0
 
 while True:
+    numOfTries = 0
     time.sleep(2)
     grab = imagegrab.grab(bbox=(580, 832, 637, 860))
     grab.save('bot.png')
@@ -21,7 +23,7 @@ while True:
 
     if txt == '/bot':
         pyautogui.typewrite('Hello, this is u.seless.bot! You can type /Bot rps, to play Rock, paper'
-                            ' scissors with me!')
+                            ' scissors with me! We will play best out of three.')
         pyautogui.press('enter')
 
     if txt == '/bot rps':
@@ -84,15 +86,18 @@ while True:
             # Chooses enemy move and gets user input
             enemyMove = random.choice(moveList)
             say('Do you choose rock, paper, or scissors? ')
-            time.sleep(7)
+            time.sleep(5)
             move = get_input().replace('.', '').replace('\n', '').replace(stupidChar, '')
 
             print(move)
             # Checks if move is allowed
-            if move.lower() not in moveList:
-                say('Error viewing text, please try again.')
+            while move.lower() not in moveList and numOfTries <= 10:
+                numOfTries += 1
                 time.sleep(1)
-                continue
+                move = get_input().replace('.', '').replace('\n', '').replace(stupidChar, '')
+            # Checks if bot was left on
+            if numOfTries >= 10:
+                break
 
             time.sleep(0.5)
             # Checks possibilities
